@@ -1,0 +1,60 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "Lista_Pliki",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "Lista_Pliki::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-Lista_Pliki-Debug-83eab8b43f9fd7794c79.json",
+					"name" : "Lista_Pliki",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/PROJEKTY/Lista_Pliki/cmake-build-debug",
+		"source" : "D:/PROJEKTY/Lista_Pliki"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}
