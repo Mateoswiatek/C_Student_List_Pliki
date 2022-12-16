@@ -4,7 +4,7 @@
  *      OPCJA Z HASHOWANIEM TAK /NIE -> suma ascii nazwiska -> modulo pewnej liczby.
  *
  *      dodawanie studentow
- * wypisanie wszystkich (w tedy bez haszowania)
+ *    wypisanie wszystkich (w tedy bez haszowania)
  * wyszukiwanie po ocenie / nazwisko
  * Usuwanie po ocenie / nazwisku pierwszego napotkanego (wszystkich)
  * Dodawanie po ocenie / nazwisku
@@ -45,10 +45,10 @@ void dodaj_studentow(int ilosc, char klasa[50], int haszowanie){
         scanf("%s", &nazwisko);
         if(haszowanie){
             hash1= hash(nazwisko);
-            w = fprintf(Plik, "%d %lu\n", ocena, hash1);
+            w = fprintf(Plik, "%d;%lu;\n", ocena, hash1);
             printf("hash nazwiska A= %lu\n", hash1);
         }else{
-            w = fprintf(Plik, "%d %s\n", ocena, nazwisko);
+            w = fprintf(Plik, "%d;%s;\n", ocena, nazwisko);
         }
         printf("Ocena %d, Student %s\n", ocena, nazwisko);
     }
@@ -62,6 +62,10 @@ void wypisz_wszystkich(char nazwa_pliku[50]){
     int w, ocena;
 
     plik=fopen(nazwa_pliku, "r");
+    while(w!=EOF) {
+        w = fscanf(plik, "%d", &ocena);
+    }
+
 
 
 
@@ -75,6 +79,11 @@ int main(void){
     union unia u1;
     int wybor, ilosc, haszowanie;
     char nazwa_pliku[50] ;
+
+    char XX=';';
+    printf("; ma wartosc: %d\n", XX);
+
+
     printf("czy haszujemy:?\n");
     scanf("%d", &haszowanie);
 
