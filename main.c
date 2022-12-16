@@ -4,7 +4,7 @@
  *      OPCJA Z HASHOWANIEM TAK /NIE -> suma ascii nazwiska -> modulo pewnej liczby.
  *
  *      dodawanie studentow
- *    wypisanie wszystkich (w tedy bez haszowania)
+ *      wypisanie wszystkich (w tedy bez haszowania)
  * wyszukiwanie po ocenie / nazwisko
  * Usuwanie po ocenie / nazwisku pierwszego napotkanego (wszystkich)
  * Dodawanie po ocenie / nazwisku
@@ -56,37 +56,37 @@ void dodaj_studentow(int ilosc, char klasa[50], int haszowanie){
     if(w==EOF) printf("blad zamkniecia\n");
 }
 
-void wypisz_wszystkich(char nazwa_pliku[50]){
+void wypisz_wszystkich(char nazwa_pliku[50]){ // ; ma symbol 59
     FILE *plik;
-    char nazwisko[100];
-    int w, ocena;
+    int w;
 
-    plik=fopen(nazwa_pliku, "r");
-    while(w!=EOF) {
-        w = fscanf(plik, "%d", &ocena);
-    }
+    plik=fopen(strcat(nazwa_pliku, ".txt"), "r");
 
-
-
-
-    w= fclose(plik);
+    printf("Ocena / Nazwisko\n");
+        while(w!=EOF) {
+            w = fgetc(plik); // w zmiennej "w" jest numer aktualnego znaku.
+            if (w == 59) {
+                printf(" ");
+                continue;
+            }
+            printf("%c", w);
+        }
+    w = fclose(plik);
     if(w==EOF) printf("blad zamkniecia\n");
 }
 
 
-
 int main(void){
     union unia u1;
-    int wybor, ilosc, haszowanie;
+    int wybor, ilosc, haszowanie=0;
     char nazwa_pliku[50] ;
+
 
     char XX=';';
     printf("; ma wartosc: %d\n", XX);
 
-
-    printf("czy haszujemy:?\n");
-    scanf("%d", &haszowanie);
-
+    //printf("czy haszujemy:?\n");
+    //scanf("%d", &haszowanie);
     while (1) {
         printf("dzialania:\n0-dodawanie stuentow (podana ilosc)\n1-wyswietlanie wszystkich studentow\n2-wyszukiwanie po ocenie / nazwisku\n3-usuwanie pierwszego napotkanego(po ocenie / nazwisku)\n4-dodawanie po danej ocenie/nazwisku\n5-usuwanie listy\n%d-Wyjscie\n", WYJSCIE);
         scanf("%d", &wybor);
@@ -100,6 +100,8 @@ int main(void){
                 dodaj_studentow(ilosc, nazwa_pliku, haszowanie);
                 break;
             case 1:
+                printf("podaj kalse (1,2)");
+                scanf("%s", &nazwa_pliku);
                 wypisz_wszystkich(nazwa_pliku);
                 break;
 
