@@ -1,0 +1,3 @@
+A = 65
+Swiatek = 536
+Swiatee = 722
