@@ -55,7 +55,7 @@ void dodaj_studentow(int ilosc, char klasa[50], int haszowanie){
     if(w==EOF) printf("blad zamkniecia\n");
 }
 
-void wypisz_wszystkich(char nazwa_pliku[50]){
+void wypisz_wszystkich(char nazwa_pliku[50], int hash){
     FILE *plik;
     int w;
 
@@ -72,6 +72,7 @@ void wypisz_wszystkich(char nazwa_pliku[50]){
         }
     w = fclose(plik);
     if(w==EOF) printf("blad zamkniecia\n");
+    if(hash) printf("nie dziw sie, nazwiska są zahaszowane ;)\n");
 }
 
 
@@ -80,8 +81,8 @@ int main(void){
     int wybor, ilosc, haszowanie=0;
     char nazwa_pliku[50] ;
 
-    //printf("czy haszujemy:?\n");
-    //scanf("%d", &haszowanie);
+    printf("czy haszujemy:?\n");
+    scanf("%d", &haszowanie);
     while (1) {
         //printf("dzialania:\n0-dodawanie stuentow (podana ilosc)\n1-wyswietlanie wszystkich studentow\n2-wyszukiwanie po ocenie / nazwisku\n3-usuwanie pierwszego napotkanego(po ocenie / nazwisku)\n4-dodawanie po danej ocenie/nazwisku\n5-usuwanie listy\n%d-Wyjscie\n", WYJSCIE);
         scanf("%d", &wybor);
@@ -97,7 +98,7 @@ int main(void){
             case 1:
                 printf("podaj kalse:\n");
                 scanf("%s", &nazwa_pliku);
-                wypisz_wszystkich(nazwa_pliku);
+                wypisz_wszystkich(nazwa_pliku, haszowanie);
                 break;
 
             /*case 2:
