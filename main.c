@@ -10,6 +10,7 @@
  * Dodawanie po ocenie / nazwisku
  * Czyszczenie pliku
  *
+ *  ; =59
  */
 
 #define WYJSCIE 9
@@ -36,8 +37,6 @@ void dodaj_studentow(int ilosc, char klasa[50], int haszowanie){
     Plik=fopen(strcat(klasa, ".txt"), "a"); // strcat do dopisywania na koncu pierwszego tego co w drugim
     if(Plik==0) printf("blad otwarcia\n");
 
-    printf("w petli ilosc %d, klasa %s\n", ilosc, klasa);
-
     for(int i=0; i<ilosc; i++){
         printf("podaj ocene: \n");
         scanf("%d", &ocena);
@@ -50,13 +49,13 @@ void dodaj_studentow(int ilosc, char klasa[50], int haszowanie){
         }else{
             w = fprintf(Plik, "%d;%s;\n", ocena, nazwisko);
         }
-        printf("Ocena %d, Student %s\n", ocena, nazwisko);
+        //printf("Ocena %d, Student %s\n", ocena, nazwisko);
     }
     w = fclose(Plik);
     if(w==EOF) printf("blad zamkniecia\n");
 }
 
-void wypisz_wszystkich(char nazwa_pliku[50]){ // ; ma symbol 59
+void wypisz_wszystkich(char nazwa_pliku[50]){
     FILE *plik;
     int w;
 
@@ -81,26 +80,22 @@ int main(void){
     int wybor, ilosc, haszowanie=0;
     char nazwa_pliku[50] ;
 
-
-    char XX=';';
-    printf("; ma wartosc: %d\n", XX);
-
     //printf("czy haszujemy:?\n");
     //scanf("%d", &haszowanie);
     while (1) {
-        printf("dzialania:\n0-dodawanie stuentow (podana ilosc)\n1-wyswietlanie wszystkich studentow\n2-wyszukiwanie po ocenie / nazwisku\n3-usuwanie pierwszego napotkanego(po ocenie / nazwisku)\n4-dodawanie po danej ocenie/nazwisku\n5-usuwanie listy\n%d-Wyjscie\n", WYJSCIE);
+        //printf("dzialania:\n0-dodawanie stuentow (podana ilosc)\n1-wyswietlanie wszystkich studentow\n2-wyszukiwanie po ocenie / nazwisku\n3-usuwanie pierwszego napotkanego(po ocenie / nazwisku)\n4-dodawanie po danej ocenie/nazwisku\n5-usuwanie listy\n%d-Wyjscie\n", WYJSCIE);
         scanf("%d", &wybor);
 
         switch (wybor) {
             case 0:
-                printf("podaj ilosc studentow do dopisania\n");
+                printf("podaj ilosc studentow do dopisania:\n");
                 scanf("%d", &ilosc);
-                printf("podaj kalse (1,2)");
+                printf("podaj kalse:\n");
                 scanf("%s", &nazwa_pliku);
                 dodaj_studentow(ilosc, nazwa_pliku, haszowanie);
                 break;
             case 1:
-                printf("podaj kalse (1,2)");
+                printf("podaj kalse:\n");
                 scanf("%s", &nazwa_pliku);
                 wypisz_wszystkich(nazwa_pliku);
                 break;
