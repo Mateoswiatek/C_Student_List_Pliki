@@ -76,29 +76,66 @@ void wypisz_wszystkich(char nazwa_pliku[50], int hash){
 }
 
 void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazwisko
-    int w;
-    //FILE *plik;
-    //plik=fopen(strcat(nazwa_pliku, ".txt"), "r");
+    FILE *plik;
+    int w, aktualna_ocena;
     printf("tryb: %d ocena: %d Nazwisko: %s\n", tryb, dane.szukana_ocena, dane.szukane_nazwisko);
+    plik=fopen(strcat(nazwa_pliku, ".txt"), "r");
+
+
+    w = fgetc(plik);
+    if(w==EOF) printf("blad odczytu\n");
+    w-=48; // zwraca kod ascii odejmuje kod ascii liczby 0, w wyniku mam liczbę jaka kryje się pod kodem ascii
+
+    if((int)w == 1 ) printf("jest rowne");
+    else printf("nie sa rowne");
+
+
+    //w = fgetc(plik); dopóki w!=59  dopoki reszta z dzielenia to 0 to jessttesmy na liczbie
+
+    w = fgetc(plik);
+    w-=48;
+    printf("drugi to %d",w);
+
+    /*
+    while(w!=EOF) {
+        w = fgetc(plik); // w zmiennej "w" jest numer aktualnego znaku.
+        if (w == 59) {
+            printf(" ");
+            continue;
+        }
+        printf("%c", w);
+    }
+     */
+    w = fclose(plik);
+    if(w==EOF) printf("blad zamkniecia\n");
+
+    // w danych mamy int-ocenę, w zwraca nam numer
 /*
-    if(tryb){ // ocenka
+    if(tryb){ // ocenka   // nowa linia jeśli dwa razy bedzie ;
         while(w!=EOF){
-            w = fgetc(plik);
-            getchar( (char) dane.szukana_ocena)
-            printf("%c", w);
+
+            if (w == 59);
         }
     }
-    */
-    //w = fclose(plik);
-    //if(w==EOF) printf("blad zamkniecia\n");
+ */
 }
+
 int main(void){
     union unia u1;
     int wybor, ilosc, tryb, haszowanie=0;
-    char nazwa_pliku[50] ;
+    char nazwa_pliku[50];
 
     //printf("czy haszujemy:?\n");
     //scanf("%d", &haszowanie);
+
+    //int x=2;
+    //printf("ocenka to: %c\n ", (char)((int)((char)(x))));
+
+    int ascii = 64; // Masz teraz jakis kod ascii
+    char znak = (char)ascii; // Konwertuje go na typ znakowy
+
+    printf("%c", znak);
+
     while (1) {
         printf("dzialania:\n0-dodawanie stuentow (podana ilosc)\n1-wyswietlanie wszystkich studentow\n2-wyszukiwanie po ocenie / nazwisku\n3-usuwanie pierwszego napotkanego(po ocenie / nazwisku)\n4-dodawanie po danej ocenie/nazwisku\n5-usuwanie listy\n%d-Wyjscie\n", WYJSCIE);
         scanf("%d", &wybor);
@@ -118,18 +155,21 @@ int main(void){
                 break;
 
             case 2:
-               printf("wyszukiwanie w ostatnio dodawanym po\n1-ocena\n0-nazwisko\n");
-               scanf("%d", &tryb);
-               if (tryb) {
-                   printf("podaj ocene:\n");
-                   scanf("%d", &u1.szukana_ocena);
-                   znajdz(nazwa_pliku, u1, tryb);
-               } else {
-                   printf("podaj nazwisko: ");
-                   scanf("%s", &u1.szukane_nazwisko);
-                   znajdz(nazwa_pliku, u1, tryb);
-               }
-               break;
+                printf("podaj kalse:\n");
+                scanf("%s", &nazwa_pliku);
+                printf("wyszukiwanie w ostatnio dodawanym po\n1-ocena\n0-nazwisko\n");
+                scanf("%d", &tryb);
+
+                if (tryb) {
+                    printf("podaj ocene:\n");
+                    scanf("%d", &u1.szukana_ocena);
+                    znajdz(nazwa_pliku, u1, tryb);
+                } else {
+                    printf("podaj nazwisko: ");
+                    scanf("%s", &u1.szukane_nazwisko);
+                    znajdz(nazwa_pliku, u1, tryb);
+                }
+                break;
                 /*
             case 3:
                 printf("usuwanie po\n0-ocena\n1-nazwisko\n");
