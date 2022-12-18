@@ -79,7 +79,7 @@ void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazw
     int w;
     //FILE *plik;
     //plik=fopen(strcat(nazwa_pliku, ".txt"), "r");
-    printf("dziala\n");
+    printf("tryb: %d ocena: %d Nazwisko: %s\n", tryb, dane.szukana_ocena, dane.szukane_nazwisko);
 /*
     if(tryb){ // ocenka
         while(w!=EOF){
@@ -127,6 +127,7 @@ int main(void){
                } else {
                    printf("podaj nazwisko: ");
                    scanf("%s", &u1.szukane_nazwisko);
+                   znajdz(nazwa_pliku, u1, tryb);
                }
                break;
                 /*
