@@ -75,16 +75,32 @@ void wypisz_wszystkich(char nazwa_pliku[50], int hash){
     if(hash) printf("nie dziw sie, nazwiska są zahaszowane ;)\n");
 }
 
-
+void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazwisko
+    int w;
+    //FILE *plik;
+    //plik=fopen(strcat(nazwa_pliku, ".txt"), "r");
+    printf("dziala\n");
+/*
+    if(tryb){ // ocenka
+        while(w!=EOF){
+            w = fgetc(plik);
+            getchar( (char) dane.szukana_ocena)
+            printf("%c", w);
+        }
+    }
+    */
+    //w = fclose(plik);
+    //if(w==EOF) printf("blad zamkniecia\n");
+}
 int main(void){
     union unia u1;
-    int wybor, ilosc, haszowanie=0;
+    int wybor, ilosc, tryb, haszowanie=0;
     char nazwa_pliku[50] ;
 
-    printf("czy haszujemy:?\n");
-    scanf("%d", &haszowanie);
+    //printf("czy haszujemy:?\n");
+    //scanf("%d", &haszowanie);
     while (1) {
-        //printf("dzialania:\n0-dodawanie stuentow (podana ilosc)\n1-wyswietlanie wszystkich studentow\n2-wyszukiwanie po ocenie / nazwisku\n3-usuwanie pierwszego napotkanego(po ocenie / nazwisku)\n4-dodawanie po danej ocenie/nazwisku\n5-usuwanie listy\n%d-Wyjscie\n", WYJSCIE);
+        printf("dzialania:\n0-dodawanie stuentow (podana ilosc)\n1-wyswietlanie wszystkich studentow\n2-wyszukiwanie po ocenie / nazwisku\n3-usuwanie pierwszego napotkanego(po ocenie / nazwisku)\n4-dodawanie po danej ocenie/nazwisku\n5-usuwanie listy\n%d-Wyjscie\n", WYJSCIE);
         scanf("%d", &wybor);
 
         switch (wybor) {
@@ -101,50 +117,51 @@ int main(void){
                 wypisz_wszystkich(nazwa_pliku, haszowanie);
                 break;
 
-            /*case 2:
-               printf("wyszukiwanie po\n0-ocena\n1-nazwisko\n");
+            case 2:
+               printf("wyszukiwanie w ostatnio dodawanym po\n1-ocena\n0-nazwisko\n");
                scanf("%d", &tryb);
                if (tryb) {
-                   printf("podaj nazwisko: ");
-                   scanf("%s", &S_nazwisko);
+                   printf("podaj ocene:\n");
+                   scanf("%d", &u1.szukana_ocena);
+                   znajdz(nazwa_pliku, u1, tryb);
                } else {
-                   printf("podaj ocene:");
-                   scanf("%d", &ocenka);
-               }
-               wyszukiwanie(root, tryb, ocenka, S_nazwisko);
-               break;
-           case 3:
-               printf("usuwanie po\n0-ocena\n1-nazwisko\n");
-               scanf("%d", &tryb);
-               if (tryb) {
                    printf("podaj nazwisko: ");
-                   scanf("%s", &S_nazwisko);
-               } else {
-                   printf("podaj ocene:");
-                   scanf("%d", &ocenka);
+                   scanf("%s", &u1.szukane_nazwisko);
                }
-               usuwanie_pierwszo_napotkanego(ws_root, root, tryb, ocenka, S_nazwisko);
-               printf("wyszlo\n");
-               root = numer_komurki_gdzie_root;
                break;
-           case 4:
-               printf("dodawanie po\n0-ocena\n1-nazwisko\n");
-               scanf("%d", &tryb);
-               if (tryb) {
-                   printf("podaj nazwisko: ");
-                   scanf("%s", &S_nazwisko);
-               } else {
-                   printf("podaj ocene:");
-                   scanf("%d", &ocenka);
-               }
-               wpisz_po(root, tryb, ocenka, S_nazwisko);
-               break;
-           case 5:
-               zwalnianie_listy(root);
-               break;
-           case WYJSCIE:
-               printf("dzieki za skorzystanie z programu\n");
-               return 0;*/
+                /*
+            case 3:
+                printf("usuwanie po\n0-ocena\n1-nazwisko\n");
+                scanf("%d", &tryb);
+                if (tryb) {
+                    printf("podaj nazwisko: ");
+                    scanf("%s", &S_nazwisko);
+                } else {
+                    printf("podaj ocene:");
+                    scanf("%d", &ocenka);
+                }
+                usuwanie_pierwszo_napotkanego(ws_root, root, tryb, ocenka, S_nazwisko);
+                printf("wyszlo\n");
+                root = numer_komurki_gdzie_root;
+                break;
+            case 4:
+                printf("dodawanie po\n0-ocena\n1-nazwisko\n");
+                scanf("%d", &tryb);
+                if (tryb) {
+                    printf("podaj nazwisko: ");
+                    scanf("%s", &S_nazwisko);
+                } else {
+                    printf("podaj ocene:");
+                    scanf("%d", &ocenka);
+                }
+                wpisz_po(root, tryb, ocenka, S_nazwisko);
+                break;
+            case 5:
+                zwalnianie_listy(root);
+                break;
+            case WYJSCIE:
+                printf("dzieki za skorzystanie z programu\n");
+                return 0;*/
         }
     }
 
