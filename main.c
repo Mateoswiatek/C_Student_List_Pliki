@@ -181,19 +181,20 @@ void usun_z_oceny_nazwiska(char nazwa_pliku[50], union unia dane, int tryb){
             if (w == EOF) break;
             x=w-48;
             ocena = (int) x;
-            fseek(plik, 2, SEEK_CUR); // na nazwisko
+            fseek(plik, 1, SEEK_CUR); // na nazwisko
             w = fgetc(plik); // in w mamy pierwsza litere nazwiska tu git dziala
             // mamy pierwsza litere nazwiska
             while(w!=EOF) {
                 nazwisko[i] = (char) w;
+
                 i++;
                 w = fgetc(plik);
                 if (w == 59) { // doszlismy do konca nazwiska   moznabyloby nie na seek_set tylko na cur, zaleznie od i (dlugosci)
                     i = 0; // zerujemy bo to nazwisko juz przeanalizowalismy
+                    printf("szukane:  %s\n", dane.szukane_nazwisko);
                     printf("aktualne: %s\n", nazwisko);
-                    printf("szukane:  %s\n", nazwisko);
                     if (strcmp(dane.szukane_nazwisko, nazwisko) == 0) { // sa takie same
-                        printf("sa takie same");
+                        printf("sa takie same\n");
                     }
                     else{
                         fprintf(bufor, "%d;%s;\n", ocena, nazwisko); // zapisujemy tych co nie chcemy wywalic
