@@ -76,19 +76,19 @@ void wypisz_wszystkich(char nazwa_pliku[50], int hash){
 
 void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazwisko
     FILE *plik;
-    int x, w, pom=0, aktualna_ocena;
+    int i,pozycja, x, w, koniec_pliku, pom=0, koniec_nazwiska;
     char nazwisko[50];
-    int pozycja;
     plik=fopen(strcat(nazwa_pliku, ".txt"), "r");
-
 
     if(tryb) {
         while(w!=EOF) {
+            w = fgetc(plik);
+
             if (w == EOF){
                 printf("blad odczytu / wyjscie\n"); // w ostatnim bedzie to bo przesuwamy na koniec pliku
                 break;
             }
-            w = fgetc(plik);
+
             x = w;
             if (w == 59) {
                 pom += 1; // jesli wskazujemy na ;
@@ -111,33 +111,33 @@ void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazw
             }
         }
     }
-    else {
-        while(w!=EOF) {
-            pozycja = ftell(plik); // gdzie mielismy poczatek nazwiska
+    else { // pokazuje mi na pierwsze nazwisko
+        pozycja=ftell(plik); // gdzie sie zaczyna nazwisko
 
-            while (1) {
-                if (w != 59) {
-                    //w = fgetc(plik);  ale w tedy while zamiast if
-                    printf("%c", w);
-                } else {
-                    break;
-                }
-                w = fgetc(plik);
+        while(w!=EOF) {
+            nazwisko[i]=(char)w;
+            w = fgetc(plik);
+            if (w == EOF){
+                printf("blad odczytu / wyjscie\n"); // w ostatnim bedzie to bo przesuwamy na koniec pliku
+                break;
             }
 
-            //nazwisko[i]=(char)w;
-
-            fseek(plik, pozycja, SEEK_SET); // wracamy tam gdzie bylismy, troche bez sensu ale no XD
-            /*while(w!=EOF) {
-                for(int i; i<=50;i++){
-                    nazwisko[i]=(char)w;
-                    w = fgetc(plik);
-                    if(w==59) break;
+            if(w==59){ // doszlismy do konca nazwiska
+                koniec_nazwiska=ftell(plik); // wskazujemy na ; po nazwisku 3;nazwisko; <-
+                if(strcmp(dane.szukane_nazwisko, nazwisko)==0){ // sa takie same
+                    //              w pozycji sie zaczyna, nazwisko jest 2 symbole wczensiej x;Nazwisko;
+                    fseek(plik, pozycja-1, SEEK_SET); // wracamy tam gdzie bylismy, troche bez sensu ale no XD
+                    w=fgetc(plik);
+                    printf("ocena: %c", w);
                 }
-                printf("nazwisko to %s", nazwisko);
-            } */
+                else{ // przechodizmy do kolejnego nazwiska
+                    koniec_pliku =fseek(plik, koniec_nazwiska+3, SEEK_SET);
+                    if(!koniec_pliku) break;
+                    pozycja=ftell(plik);
+                }
+            }
         }
-    }
+    } // z hashem zrobić 100*, 10*, 1*.... kolejne wartosci, jesli zawsze bedzie 3 pola XD albo jakos inaczej
     w = fclose(plik);
     if(w==EOF) printf("blad zamkniecia\n");
 }
