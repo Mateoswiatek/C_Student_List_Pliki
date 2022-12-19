@@ -140,7 +140,7 @@ void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazw
                 if(next_nazwisko!=0) break; // jesli jest blad przy przejsciu, to znaczy ze koniec pliku
                 pozycja=ftell(plik); // zapisujemy gdzie jest poczatek nowego nazwiska
                 w = fgetc(plik); // pobieram pierwsza litere z nazwiska
-                strcpy(nazwisko , " ");
+                memset(nazwisko, 0, 50); // wyczyszczenie bufora nazwiska
             }
         }
     } // z hashem zrobić 100*, 10*, 1*.... kolejne wartosci, jesli zawsze bedzie 3 pola XD albo jakos inaczej
@@ -186,7 +186,6 @@ void usun_z_oceny_nazwiska(char nazwa_pliku[50], union unia dane, int tryb){
             // mamy pierwsza litere nazwiska
             while(w!=EOF) {
                 nazwisko[i] = (char) w;
-
                 i++;
                 w = fgetc(plik);
                 if (w == 59) { // doszlismy do konca nazwiska   moznabyloby nie na seek_set tylko na cur, zaleznie od i (dlugosci)
@@ -201,7 +200,7 @@ void usun_z_oceny_nazwiska(char nazwa_pliku[50], union unia dane, int tryb){
                     }
                     //in w mamy ostatni ;
                     w = fgetc(plik);
-                    strcpy(nazwisko , " ");
+                    memset(nazwisko, 0, 50); // wyczuszczenie bufora nazwiska
                     break;
                 }
             }
