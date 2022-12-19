@@ -1,18 +1,31 @@
 #include <stdio.h>
 #include <string.h>
+
+#define WYJSCIE 5
+
 /*
  *      OPCJA Z HASHOWANIEM TAK /NIE -> suma ascii nazwiska -> modulo pewnej liczby.
  *
  *      dodawanie studentow
  *      wypisanie wszystkich (w tedy bez haszowania)
- *   wyszukiwanie po ocenie / nazwisko  bo bez hashu
- *   Usuwanie po ocenie / nazwisku (wszystkich) ( bez nazwisk)
- *       Czyszczenie pliku -  otworzyc jako nadpisywanie i zakmnac, ez
+ *   wyszukiwanie po ocenie / nazwisko  (bez hashu)  literowanie po kolei
+ *   Usuwanie po ocenie / nazwisku (wszystkich) (bez hashu)
+ *      Czyszczenie pliku -  otworzyc jako nadpisywanie i zakmnac, ez
+ *
+ *   C jest mega problemantyczny, normalnie zapisałbym zahaszowane nazwisko np (123) (nawet za pomocą funkcji co mi zwraca
+ *   kody ascii. kod ascii rzutuję na inta, dostaje liczbę(1), zapisuje ją do chara("1"), biorę kod kolejnej liczby etc...
+ *   dostaje chara gdzie jest "123", rzutuje chara na liczbę i bajlando mam moją liczbę.
+ *   kod_ascii 1 -> char "1"
+ *   kod_ascii 2 -> char "12"
+ *   kod_ascii 3 -> char "123"
+ *   char "123" -> int 123
+ *
+ *   Ewentuanie jakb dało się ograniczyć funkcję fscanf do pewnego przedziału, od aktualnego aż do ; to w tedy dałoby
+ *   się to w miarę ładnie i szybko zrobić.
  *
  *  ; =59
  */
 
-#define WYJSCIE 5
 union unia{ // dowyszukiwania
     int szukana_ocena; // u1.szukana_ocena = 2; %d
     char szukane_nazwisko[100]; // strcpy(u1.szukane_nazwisko , "Swiatek"); %s
@@ -146,7 +159,6 @@ void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazw
     } // z hashem zrobić 100*, 10*, 1*.... kolejne wartosci, jesli zawsze bedzie 3 pola XD albo jakos inaczej
     w = fclose(plik);
     if(w==EOF) printf("blad zamkniecia\n");
-
 }
 
 void usun_z_oceny_nazwiska(char nazwa_pliku[50], union unia dane, int tryb){
@@ -174,7 +186,7 @@ void usun_z_oceny_nazwiska(char nazwa_pliku[50], union unia dane, int tryb){
             }
         }
     }
-    else{ // tu zrobic przepisywanie do bufora jesli nazwisko jest rozne, jesli jest takie same, to usunac
+    else{
         while(w!=EOF) {
             i=0;
             w = fgetc(plik);
@@ -183,15 +195,12 @@ void usun_z_oceny_nazwiska(char nazwa_pliku[50], union unia dane, int tryb){
             ocena = (int) x;
             fseek(plik, 1, SEEK_CUR); // na nazwisko
             w = fgetc(plik); // in w mamy pierwsza litere nazwiska tu git dziala
-            // mamy pierwsza litere nazwiska
             while(w!=EOF) {
                 nazwisko[i] = (char) w;
                 i++;
                 w = fgetc(plik);
                 if (w == 59) { // doszlismy do konca nazwiska   moznabyloby nie na seek_set tylko na cur, zaleznie od i (dlugosci)
                     i = 0; // zerujemy bo to nazwisko juz przeanalizowalismy
-                    printf("szukane:  %s\n", dane.szukane_nazwisko);
-                    printf("aktualne: %s\n", nazwisko);
                     if (strcmp(dane.szukane_nazwisko, nazwisko) == 0) { // sa takie same
                         printf("sa takie same\n");
                     }
@@ -210,7 +219,6 @@ void usun_z_oceny_nazwiska(char nazwa_pliku[50], union unia dane, int tryb){
     if(w==EOF) printf("blad zamkniecia pliku\n");
     w = fclose(bufor);
     if(w==EOF) printf("blad zamkniecia bufora\n");
-
 
     // zapis z bufora do naszego pliku
     plik = fopen(nazwa_pliku, "w+");
@@ -241,11 +249,12 @@ int main(void){
     int wybor, ilosc, tryb, haszowanie=0;
     char nazwa_pliku[50];
 
-    //printf("czy haszujemy:?\n");
-    //scanf("%d", &haszowanie);
+    printf("czy haszujemy:?\n");
+    scanf("%d", &haszowanie);
+    if(haszowanie) printf("tylko dopisywanie z odczytywaniem wiecej jazdy by bylo");
 
     while (1) {
-        //printf("dzialania:\n0-dodawanie stuentow (podana ilosc)\n1-wyswietlanie wszystkich studentow\n2-wyszukiwanie po ocenie / nazwisku\n3-usuwanie pierwszego napotkanego(po ocenie / nazwisku)\n4-usuwanie listy\n%d-Wyjscie\n", WYJSCIE);
+        printf("dzialania:\n0-dodawanie stuentow (podana ilosc)\n1-wyswietlanie wszystkich studentow\n2-wyszukiwanie po ocenie / nazwisku\n3-usuwanie wszystkich pasujacych do wzorca(po ocenie / nazwisku)\n4-usuwanie wszystkich\n%d-Wyjscie\n", WYJSCIE);
         scanf("%d", &wybor);
 
         switch (wybor) {
