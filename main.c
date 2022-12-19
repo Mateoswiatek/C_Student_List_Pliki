@@ -77,25 +77,26 @@ void wypisz_wszystkich(char nazwa_pliku[50], int hash){
 
 void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazwisko
     FILE *plik;
-    int w, aktualna_ocena;
-    printf("tryb: %d ocena: %d Nazwisko: %s\n", tryb, dane.szukana_ocena, dane.szukane_nazwisko);
+    int x, w, pom=0, aktualna_ocena;
     plik=fopen(strcat(nazwa_pliku, ".txt"), "r");
 
+    while(w!=EOF) {
+        x = w = fgetc(plik);
+        if (w == EOF) printf("blad odczytu\n");
+        //printf("w jest rowne %d\n", w);
+        if(w==59) pom+=1; // jesli wskazujemy na ;
+        //printf("pom jest rowne %d\n", pom);
 
-    w = fgetc(plik);
-    if(w==EOF) printf("blad odczytu\n");
-    w-=48; // zwraca kod ascii odejmuje kod ascii liczby 0, w wyniku mam liczbę jaka kryje się pod kodem ascii
-
-    if((int)w == 1 ) printf("jest rowne");
-    else printf("nie sa rowne");
-
-
-    //w = fgetc(plik); dopóki w!=59  dopoki reszta z dzielenia to 0 to jessttesmy na liczbie
-
-    w = fgetc(plik);
-    w-=48;
-    printf("drugi to %d",w);
-
+        if(pom%2==0) { // jesli wskazujemy na pierwszy element
+            x -= 48; // zwraca kod ascii odejmuje kod ascii liczby 0, w wyniku mam liczbę jaka kryje się pod kodem ascii
+            if ((int) x == dane.szukana_ocena){
+                printf("jest rowne szukanej\n");
+                break;
+            }
+        }
+        //w = fgetc(plik); dopóki w!=59  dopoki reszta z dzielenia to 0 to jessttesmy na liczbie
+    }
+    printf("wyszlismy\n");
     /*
     while(w!=EOF) {
         w = fgetc(plik); // w zmiennej "w" jest numer aktualnego znaku.
