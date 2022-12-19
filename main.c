@@ -6,14 +6,13 @@
  *      dodawanie studentow
  *      wypisanie wszystkich (w tedy bez haszowania)
  *   wyszukiwanie po ocenie / nazwisko  bo bez hashu
- * Usuwanie po ocenie / nazwisku pierwszego napotkanego (wszystkich)
- * (Dodawanie po ocenie / nazwisku)
+ *   Usuwanie po ocenie / nazwisku (wszystkich) ( bez nazwisk)
  *       Czyszczenie pliku -  otworzyc jako nadpisywanie i zakmnac, ez
  *
  *  ; =59
  */
 
-#define WYJSCIE 9
+#define WYJSCIE 5
 union unia{ // dowyszukiwania
     int szukana_ocena; // u1.szukana_ocena = 2; %d
     char szukane_nazwisko[100]; // strcpy(u1.szukane_nazwisko , "Swiatek"); %s
@@ -141,17 +140,19 @@ void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazw
                 if(next_nazwisko!=0) break; // jesli jest blad przy przejsciu, to znaczy ze koniec pliku
                 pozycja=ftell(plik); // zapisujemy gdzie jest poczatek nowego nazwiska
                 w = fgetc(plik); // pobieram pierwsza litere z nazwiska
-                strcpy(nazwisko , "         ");
+                strcpy(nazwisko , " ");
             }
         }
     } // z hashem zrobić 100*, 10*, 1*.... kolejne wartosci, jesli zawsze bedzie 3 pola XD albo jakos inaczej
     w = fclose(plik);
     if(w==EOF) printf("blad zamkniecia\n");
+
 }
 
-void usun_z_oceny(char nazwa_pliku[50], union unia dane, int tryb){
+void usun_z_oceny_nazwiska(char nazwa_pliku[50], union unia dane, int tryb){
     FILE *plik, *bufor;
-    int x, w=0;
+    int i, x, w=0, ocena;
+    char nazwisko[50];
 
     plik=fopen(strcat(nazwa_pliku, ".txt"), "r");
     bufor=fopen("BUFFOR.txt", "w+");
@@ -160,8 +161,7 @@ void usun_z_oceny(char nazwa_pliku[50], union unia dane, int tryb){
             w = fgetc(plik);
             if(w==EOF) break;
 
-            x = w;
-            x -= 48;
+            x = w-48;
             if ((int) x == dane.szukana_ocena){ // jesli jest rwone przechodzimy do ostatniego ;
                 w = fgetc(plik); // tera czytamy ;
                 while(1){ // tu odczytujemy nazwisko
@@ -174,8 +174,37 @@ void usun_z_oceny(char nazwa_pliku[50], union unia dane, int tryb){
             }
         }
     }
-    else{
-
+    else{ // tu zrobic przepisywanie do bufora jesli nazwisko jest rozne, jesli jest takie same, to usunac
+        while(w!=EOF) {
+            i=0;
+            w = fgetc(plik);
+            if (w == EOF) break;
+            x=w-48;
+            ocena = (int) x;
+            fseek(plik, 2, SEEK_CUR); // na nazwisko
+            w = fgetc(plik); // in w mamy pierwsza litere nazwiska tu git dziala
+            // mamy pierwsza litere nazwiska
+            while(w!=EOF) {
+                nazwisko[i] = (char) w;
+                i++;
+                w = fgetc(plik);
+                if (w == 59) { // doszlismy do konca nazwiska   moznabyloby nie na seek_set tylko na cur, zaleznie od i (dlugosci)
+                    i = 0; // zerujemy bo to nazwisko juz przeanalizowalismy
+                    printf("aktualne: %s\n", nazwisko);
+                    printf("szukane:  %s\n", nazwisko);
+                    if (strcmp(dane.szukane_nazwisko, nazwisko) == 0) { // sa takie same
+                        printf("sa takie same");
+                    }
+                    else{
+                        fprintf(bufor, "%d;%s;\n", ocena, nazwisko); // zapisujemy tych co nie chcemy wywalic
+                    }
+                    //in w mamy ostatni ;
+                    w = fgetc(plik);
+                    strcpy(nazwisko , " ");
+                    break;
+                }
+            }
+        }
     }
     w = fclose(plik);
     if(w==EOF) printf("blad zamkniecia pliku\n");
@@ -196,8 +225,6 @@ void usun_z_oceny(char nazwa_pliku[50], union unia dane, int tryb){
     if(w==EOF) printf("blad zamkniecia pliku\n");
     w = fclose(bufor);
     if(w==EOF) printf("blad zamkniecia bufora\n");
-
-
 }
 
 void usuwanie_zawartosci(char nazwa_pliku[50]){ // 1 ocena, 0 nazwisko
@@ -218,7 +245,7 @@ int main(void){
     //scanf("%d", &haszowanie);
 
     while (1) {
-        //printf("dzialania:\n0-dodawanie stuentow (podana ilosc)\n1-wyswietlanie wszystkich studentow\n2-wyszukiwanie po ocenie / nazwisku\n3-usuwanie pierwszego napotkanego(po ocenie / nazwisku)\n4-dodawanie po danej ocenie/nazwisku\n5-usuwanie listy\n%d-Wyjscie\n", WYJSCIE);
+        //printf("dzialania:\n0-dodawanie stuentow (podana ilosc)\n1-wyswietlanie wszystkich studentow\n2-wyszukiwanie po ocenie / nazwisku\n3-usuwanie pierwszego napotkanego(po ocenie / nazwisku)\n4-usuwanie listy\n%d-Wyjscie\n", WYJSCIE);
         scanf("%d", &wybor);
 
         switch (wybor) {
@@ -262,28 +289,13 @@ int main(void){
                 if (tryb) {
                     printf("podaj ocene: \n");
                     scanf("%d", &u1.szukana_ocena);
-                    usun_z_oceny(nazwa_pliku, u1, tryb);
                 } else {
                     printf("podaj nazwisko:\n");
                     scanf("%s", &u1.szukane_nazwisko);
-                    usun_z_oceny(nazwa_pliku, u1, tryb);
                 }
+                usun_z_oceny_nazwiska(nazwa_pliku, u1, tryb);
                 break;
-                /*
             case 4:
-                printf("dodawanie po\n0-ocena\n1-nazwisko\n");
-                scanf("%d", &tryb);
-                if (tryb) {
-                    printf("podaj nazwisko: ");
-                    scanf("%s", &S_nazwisko);
-                } else {
-                    printf("podaj ocene:");
-                    scanf("%d", &ocenka);
-                }
-                wpisz_po(root, tryb, ocenka, S_nazwisko);
-                break;
-                 */
-            case 5:
                 printf("podaj kalse:\n");
                 scanf("%s", &nazwa_pliku);
                 usuwanie_zawartosci(nazwa_pliku);

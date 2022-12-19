@@ -1,4 +1,4 @@
-2;BNazwisko;
-3;CNazwisko;
-2;DNazwisko;
-5;BNazwisko;
+1;Nazwisko;
+2;Nazwisko;
+3;Nazwisko;
+4;Nazwisko;
