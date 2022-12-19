@@ -8,7 +8,7 @@
  *   wyszukiwanie po ocenie / nazwisko  bo bez hashu
  * Usuwanie po ocenie / nazwisku pierwszego napotkanego (wszystkich)
  * (Dodawanie po ocenie / nazwisku)
- * (Czyszczenie pliku)  otworzyc jako nadpisywanie i zapisac spacje, ez
+ *       Czyszczenie pliku -  otworzyc jako nadpisywanie i zakmnac, ez
  *
  *  ; =59
  */
@@ -149,6 +149,66 @@ void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazw
     if(w==EOF) printf("blad zamkniecia\n");
 }
 
+void usun_z_oceny(char nazwa_pliku[50], union unia dane, int tryb){
+    FILE *plik, *bufor;
+    int x, w=0;
+
+    plik=fopen(strcat(nazwa_pliku, ".txt"), "r");
+    bufor=fopen("BUFFOR.txt", "w+");
+    if(tryb) {
+        while(w!=EOF) {
+            w = fgetc(plik);
+            if(w==EOF) break;
+
+            x = w;
+            x -= 48;
+            if ((int) x == dane.szukana_ocena){ // jesli jest rwone przechodzimy do ostatniego ;
+                w = fgetc(plik); // tera czytamy ;
+                while(1){ // tu odczytujemy nazwisko
+                    w = fgetc(plik);
+                    if(w==10 || w==13) break; // 10 lub 13 to przejscie do nowej linii
+                }
+            }
+            else{
+                fprintf(bufor, "%c", w);
+            }
+        }
+    }
+    else{
+
+    }
+    w = fclose(plik);
+    if(w==EOF) printf("blad zamkniecia pliku\n");
+    w = fclose(bufor);
+    if(w==EOF) printf("blad zamkniecia bufora\n");
+
+
+    // zapis z bufora do naszego pliku
+    plik = fopen(nazwa_pliku, "w+");
+    bufor = fopen("BUFFOR.txt", "r");
+    while(w!=EOF) {
+        w = fgetc(bufor);
+        if(w==EOF) break;
+        fprintf(plik, "%c", w);
+    }
+    //zamkniecie
+    w = fclose(plik);
+    if(w==EOF) printf("blad zamkniecia pliku\n");
+    w = fclose(bufor);
+    if(w==EOF) printf("blad zamkniecia bufora\n");
+
+
+}
+
+void usuwanie_zawartosci(char nazwa_pliku[50]){ // 1 ocena, 0 nazwisko
+    int w;
+    FILE *plik;
+    plik=fopen(strcat(nazwa_pliku, ".txt"), "w");// do zapisu i odczytu od poczatku pliku
+    w = fclose(plik);
+    if(w==EOF){printf("blad zamkniecia\n");}
+    else printf("usunieto poprawie\n");
+}
+
 int main(void){
     union unia u1;
     int wybor, ilosc, tryb, haszowanie=0;
@@ -178,36 +238,38 @@ int main(void){
             case 2:
                 printf("podaj kalse:\n");
                 scanf("%s", &nazwa_pliku);
-                printf("wyszukiwanie w ostatnio dodawanym po\n1-ocena\n0-nazwisko\n");
+                printf("wyszukiwanie po\n1-ocena\n0-nazwisko\n");
                 scanf("%d", &tryb);
 
                 if (tryb) {
                     printf("podaj ocene: \n");
                     scanf("%d", &u1.szukana_ocena);
                     printf("ocene %d maja: \n", u1.szukana_ocena);
-                    znajdz(nazwa_pliku, u1, tryb);
                 } else {
                     printf("podaj nazwisko:\n");
                     scanf("%s", &u1.szukane_nazwisko);
                     printf("Student %s ma ocene/oceny: \n", u1.szukane_nazwisko);
-                    znajdz(nazwa_pliku, u1, tryb);
+                }
+                znajdz(nazwa_pliku, u1, tryb);
+                break;
+
+            case 3:
+                printf("podaj kalse:\n");
+                scanf("%s", &nazwa_pliku);
+                printf("usuwanie po\n1-ocena\n0-nazwisko\n");
+                scanf("%d", &tryb);
+
+                if (tryb) {
+                    printf("podaj ocene: \n");
+                    scanf("%d", &u1.szukana_ocena);
+                    usun_z_oceny(nazwa_pliku, u1, tryb);
+                } else {
+                    printf("podaj nazwisko:\n");
+                    scanf("%s", &u1.szukane_nazwisko);
+                    usun_z_oceny(nazwa_pliku, u1, tryb);
                 }
                 break;
                 /*
-            case 3:
-                printf("usuwanie po\n0-ocena\n1-nazwisko\n");
-                scanf("%d", &tryb);
-                if (tryb) {
-                    printf("podaj nazwisko: ");
-                    scanf("%s", &S_nazwisko);
-                } else {
-                    printf("podaj ocene:");
-                    scanf("%d", &ocenka);
-                }
-                usuwanie_pierwszo_napotkanego(ws_root, root, tryb, ocenka, S_nazwisko);
-                printf("wyszlo\n");
-                root = numer_komurki_gdzie_root;
-                break;
             case 4:
                 printf("dodawanie po\n0-ocena\n1-nazwisko\n");
                 scanf("%d", &tryb);
@@ -220,12 +282,15 @@ int main(void){
                 }
                 wpisz_po(root, tryb, ocenka, S_nazwisko);
                 break;
+                 */
             case 5:
-                zwalnianie_listy(root);
+                printf("podaj kalse:\n");
+                scanf("%s", &nazwa_pliku);
+                usuwanie_zawartosci(nazwa_pliku);
                 break;
             case WYJSCIE:
                 printf("dzieki za skorzystanie z programu\n");
-                return 0;*/
+                return 0;
         }
     }
 
