@@ -79,7 +79,6 @@ void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazw
     int x, w, pom=0, aktualna_ocena;
     plik=fopen(strcat(nazwa_pliku, ".txt"), "r");
 
-    printf("ocene %d maja: \n", dane.szukana_ocena);
     while(w!=EOF) {
         w = fgetc(plik);
         x=w;
@@ -92,35 +91,32 @@ void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazw
             continue;
         }
 
-        if(pom%2==0) { // jesli wskazujemy na pierwszy element
-            x -= 48; // zwraca kod ascii odejmuje kod ascii liczby 0, w wyniku mam liczbę jaka kryje się pod kodem ascii
-            if ((int) x == dane.szukana_ocena){
-                fseek(plik, 1, SEEK_CUR);
-                while(1){
-                    w = fgetc(plik);
-                    if(w!=59) {
-                        printf("%c", w);
-                    }else{
-                        printf("\n");
-                        break;
+        if(tryb) {
+            if (pom % 2 == 0) { // jesli wskazujemy na pierwszy element
+                x -= 48; // zwraca kod ascii odejmuje kod ascii liczby 0, w wyniku mam liczbę jaka kryje się pod kodem ascii
+                if ((int) x == dane.szukana_ocena) {
+                    fseek(plik, 1, SEEK_CUR);
+                    while (1) {
+                        w = fgetc(plik);
+                        if (w != 59) {
+                            printf("%c", w);
+                        } else {
+                            printf("\n");
+                            break;
+                        }
                     }
-                } // bo najpierw wypisujemy, pozniej przesuwamy
+                }
             }
         }
-
-        //w = fgetc(plik); dopóki w!=59  dopoki reszta z dzielenia to 0 to jessttesmy na liczbie
-    }
-    printf("wyszlismy\n");
-    /*
-    while(w!=EOF) {
-        w = fgetc(plik); // w zmiennej "w" jest numer aktualnego znaku.
-        if (w == 59) {
-            printf(" ");
-            continue;
+        else {
+            if (pom % 2 == 1) { // wskazujemy na nazwisko
+                while(w!=EOF) {
+                    w = fgetc(plik);
+                    printf("%c", w);
+                }
+            }
         }
-        printf("%c", w);
     }
-     */
     w = fclose(plik);
     if(w==EOF) printf("blad zamkniecia\n");
 }
@@ -168,10 +164,12 @@ int main(void){
                 if (tryb) {
                     printf("podaj ocene:\n");
                     scanf("%d", &u1.szukana_ocena);
+                    printf("ocene %d maja: \n", u1.szukana_ocena);
                     znajdz(nazwa_pliku, u1, tryb);
                 } else {
                     printf("podaj nazwisko: ");
                     scanf("%s", &u1.szukane_nazwisko);
+                    printf("student %s ma ocene: \n", u1.szukane_nazwisko);
                     znajdz(nazwa_pliku, u1, tryb);
                 }
                 break;
