@@ -5,10 +5,10 @@
  *
  *      dodawanie studentow
  *      wypisanie wszystkich (w tedy bez haszowania)
- * wyszukiwanie po ocenie / nazwisko
+ *   wyszukiwanie po ocenie / nazwisko  bo bez hashu
  * Usuwanie po ocenie / nazwisku pierwszego napotkanego (wszystkich)
- * Dodawanie po ocenie / nazwisku
- * Czyszczenie pliku
+ * (Dodawanie po ocenie / nazwisku)
+ * (Czyszczenie pliku)  otworzyc jako nadpisywanie i zapisac spacje, ez
  *
  *  ; =59
  */
@@ -74,9 +74,10 @@ void wypisz_wszystkich(char nazwa_pliku[50], int hash){
     if(hash) printf("nie dziw sie, nazwiska są zahaszowane ;)\n");
 }
 
-void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazwisko
+void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazwisko // dorobic haszowanie XD
     FILE *plik;
-    int i,pozycja, x, w, next_nazwisko, pom=0, koniec_nazwiska;
+    int i, x, w, next_nazwisko, pom=0;
+    long koniec_nazwiska, pozycja; // moznabyloby dac do inta, ale wieksze pliki problem
     char nazwisko[50];
     plik=fopen(strcat(nazwa_pliku, ".txt"), "r");
 
@@ -115,13 +116,12 @@ void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazw
         fseek(plik, 2, SEEK_SET); // ustawiamy na pierwsza litere nazwiska
         pozycja=ftell(plik); // gdzie sie zaczyna nazwisko
         w=fgetc(plik);
-
         i=0; // przy wejsciu zerujemy
 
         while(w!=EOF) { // jesli bylaby opcja zeby przejsc do kolejnej linii to byloby o wiele prosciej
             nazwisko[i]=(char)w;
+            printf("literka to: %c\n", nazwisko[i]);
             i++;
-            //printf("sprawdzam: %s\n", nazwisko);
             w = fgetc(plik);
             if (w == EOF){
                 printf("blad odczytu / wyjscie\n");
@@ -132,15 +132,17 @@ void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazw
                 i=0; // zerujemy bo to nazwisko juz przeanalizowalismy
                 koniec_nazwiska=ftell(plik); // wskazujemy na ; po nazwisku 3;nazwisko; <- // mozna byloby dac 3 i bysmy byli w kolenym nazwisku, ale problem bo mozna wyjsc poza zakres
                 if(strcmp(dane.szukane_nazwisko, nazwisko)==0){ // sa takie same
-                    //              w pozycji sie zaczyna, nazwisko jest 2 symbole wczensiej x;Nazwisko;
+                    //          w pozycji sie zaczyna, nazwisko jest 2 symbole wczensiej x;Nazwisko;
                     fseek(plik, pozycja-2, SEEK_SET); // cofamy o 2 pola, czyli na ocene
                     w=fgetc(plik);
                     printf("%c\n", w);
                     fseek(plik, koniec_nazwiska, SEEK_SET); // wracamy po wyswietleniu nazwiska
                 }
-                next_nazwisko =fseek(plik, koniec_nazwiska+3, SEEK_SET); // przechodizmy do kolejnego nazwiska
-                if(!next_nazwisko) break; // jesli jest blad przy przejsciu, to znaczy ze koniec pliku
+                next_nazwisko = fseek(plik, koniec_nazwiska+4, SEEK_SET); // przechodizmy do kolejnego nazwiska
+                if(next_nazwisko!=0) break; // jesli jest blad przy przejsciu, to znaczy ze koniec pliku
                 pozycja=ftell(plik); // zapisujemy gdzie jest poczatek nowego nazwiska
+                w = fgetc(plik); // pobieram pierwsza litere z nazwiska
+                strcpy(nazwisko , "         ");
             }
         }
     } // z hashem zrobić 100*, 10*, 1*.... kolejne wartosci, jesli zawsze bedzie 3 pola XD albo jakos inaczej
@@ -155,13 +157,6 @@ int main(void){
 
     //printf("czy haszujemy:?\n");
     //scanf("%d", &haszowanie);
-
-
-
-    int ascii = 51; // Masz teraz jakis kod ascii
-    char znak = (char)ascii; // Konwertuje go na typ znakowy
-
-    printf("%c", znak);
 
     while (1) {
         printf("dzialania:\n0-dodawanie stuentow (podana ilosc)\n1-wyswietlanie wszystkich studentow\n2-wyszukiwanie po ocenie / nazwisku\n3-usuwanie pierwszego napotkanego(po ocenie / nazwisku)\n4-dodawanie po danej ocenie/nazwisku\n5-usuwanie listy\n%d-Wyjscie\n", WYJSCIE);
