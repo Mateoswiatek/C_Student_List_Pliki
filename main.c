@@ -77,21 +77,23 @@ void wypisz_wszystkich(char nazwa_pliku[50], int hash){
 void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazwisko
     FILE *plik;
     int x, w, pom=0, aktualna_ocena;
+    char nazwisko[50];
+    int pozycja;
     plik=fopen(strcat(nazwa_pliku, ".txt"), "r");
 
-    while(w!=EOF) {
-        w = fgetc(plik);
-        x=w;
-        if (w == EOF){
-            printf("blad odczytu / wyjscie\n"); // w ostatnim bedzie to bo przesuwamy na koniec pliku
-            break;
-        }
-        if(w==59){
-            pom+=1; // jesli wskazujemy na ;
-            continue;
-        }
 
-        if(tryb) {
+    if(tryb) {
+        while(w!=EOF) {
+            if (w == EOF){
+                printf("blad odczytu / wyjscie\n"); // w ostatnim bedzie to bo przesuwamy na koniec pliku
+                break;
+            }
+            w = fgetc(plik);
+            x = w;
+            if (w == 59) {
+                pom += 1; // jesli wskazujemy na ;
+                continue;
+            }
             if (pom % 2 == 0) { // jesli wskazujemy na pierwszy element
                 x -= 48; // zwraca kod ascii odejmuje kod ascii liczby 0, w wyniku mam liczbę jaka kryje się pod kodem ascii
                 if ((int) x == dane.szukana_ocena) {
@@ -108,13 +110,32 @@ void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazw
                 }
             }
         }
-        else {
-            if (pom % 2 == 1) { // wskazujemy na nazwisko
-                while(w!=EOF) {
-                    w = fgetc(plik);
+    }
+    else {
+        while(w!=EOF) {
+            pozycja = ftell(plik); // gdzie mielismy poczatek nazwiska
+
+            while (1) {
+                if (w != 59) {
+                    //w = fgetc(plik);  ale w tedy while zamiast if
                     printf("%c", w);
+                } else {
+                    break;
                 }
+                w = fgetc(plik);
             }
+
+            //nazwisko[i]=(char)w;
+
+            fseek(plik, pozycja, SEEK_SET); // wracamy tam gdzie bylismy, troche bez sensu ale no XD
+            /*while(w!=EOF) {
+                for(int i; i<=50;i++){
+                    nazwisko[i]=(char)w;
+                    w = fgetc(plik);
+                    if(w==59) break;
+                }
+                printf("nazwisko to %s", nazwisko);
+            } */
         }
     }
     w = fclose(plik);
@@ -129,10 +150,9 @@ int main(void){
     //printf("czy haszujemy:?\n");
     //scanf("%d", &haszowanie);
 
-    //int x=2;
-    //printf("ocenka to: %c\n ", (char)((int)((char)(x))));
 
-    int ascii = 64; // Masz teraz jakis kod ascii
+
+    int ascii = 51; // Masz teraz jakis kod ascii
     char znak = (char)ascii; // Konwertuje go na typ znakowy
 
     printf("%c", znak);
