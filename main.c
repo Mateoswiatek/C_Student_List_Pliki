@@ -120,7 +120,6 @@ void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazw
 
         while(w!=EOF) { // jesli bylaby opcja zeby przejsc do kolejnej linii to byloby o wiele prosciej
             nazwisko[i]=(char)w;
-            printf("literka to: %c\n", nazwisko[i]);
             i++;
             w = fgetc(plik);
             if (w == EOF){
@@ -128,13 +127,13 @@ void znajdz(char nazwa_pliku[50], union unia dane, int tryb){ // 1 ocena, 0 nazw
                 break;
             }
 
-            if(w==59){ // doszlismy do konca nazwiska   moznabyloby nie na seek_set tylko na cur, zaleznie od i
+            if(w==59){ // doszlismy do konca nazwiska   moznabyloby nie na seek_set tylko na cur, zaleznie od i (dlugosci)
                 i=0; // zerujemy bo to nazwisko juz przeanalizowalismy
                 koniec_nazwiska=ftell(plik); // wskazujemy na ; po nazwisku 3;nazwisko; <- // mozna byloby dac 3 i bysmy byli w kolenym nazwisku, ale problem bo mozna wyjsc poza zakres
                 if(strcmp(dane.szukane_nazwisko, nazwisko)==0){ // sa takie same
                     //          w pozycji sie zaczyna, nazwisko jest 2 symbole wczensiej x;Nazwisko;
                     fseek(plik, pozycja-2, SEEK_SET); // cofamy o 2 pola, czyli na ocene
-                    w=fgetc(plik);
+                    w=fgetc(plik); // pobieramy ocenke
                     printf("%c\n", w);
                     fseek(plik, koniec_nazwiska, SEEK_SET); // wracamy po wyswietleniu nazwiska
                 }
@@ -159,7 +158,7 @@ int main(void){
     //scanf("%d", &haszowanie);
 
     while (1) {
-        printf("dzialania:\n0-dodawanie stuentow (podana ilosc)\n1-wyswietlanie wszystkich studentow\n2-wyszukiwanie po ocenie / nazwisku\n3-usuwanie pierwszego napotkanego(po ocenie / nazwisku)\n4-dodawanie po danej ocenie/nazwisku\n5-usuwanie listy\n%d-Wyjscie\n", WYJSCIE);
+        //printf("dzialania:\n0-dodawanie stuentow (podana ilosc)\n1-wyswietlanie wszystkich studentow\n2-wyszukiwanie po ocenie / nazwisku\n3-usuwanie pierwszego napotkanego(po ocenie / nazwisku)\n4-dodawanie po danej ocenie/nazwisku\n5-usuwanie listy\n%d-Wyjscie\n", WYJSCIE);
         scanf("%d", &wybor);
 
         switch (wybor) {
@@ -183,14 +182,14 @@ int main(void){
                 scanf("%d", &tryb);
 
                 if (tryb) {
-                    printf("podaj ocene:\n");
+                    printf("podaj ocene: \n");
                     scanf("%d", &u1.szukana_ocena);
                     printf("ocene %d maja: \n", u1.szukana_ocena);
                     znajdz(nazwa_pliku, u1, tryb);
                 } else {
-                    printf("podaj nazwisko: ");
+                    printf("podaj nazwisko:\n");
                     scanf("%s", &u1.szukane_nazwisko);
-                    printf("student %s ma ocene: \n", u1.szukane_nazwisko);
+                    printf("Student %s ma ocene/oceny: \n", u1.szukane_nazwisko);
                     znajdz(nazwa_pliku, u1, tryb);
                 }
                 break;
